@@ -1,20 +1,46 @@
 // const express = require('express')                           // Equivalent to import.
-import express from 'express';                                  // Now we can use import syntax instead of require.
-import Hello from "./Hello.js";
+import express from 'express'; 
+import Hello from "./hello.js";
 import Lab5 from "./Lab5.js";
 import CourseRoutes from "./Kanbas/courses/routes.js";
 import cors from "cors";                                        // Import cors library.
 import ModuleRoutes from './Kanbas/modules/routes.js';
 import AssignmentRoutes from './Kanbas/assignments/routes.js';
-
+import mongoose from "mongoose";
+import UserRoutes from "./Users/routes.js";
+import session from "express-session";
+import "dotenv/config";
 const app = express();                                          // Create new express instance.
-app.use(cors());                                                // Make sure cors is used right after creating the app express instance.
-app.use(express.json());                                        // Make sure this statement occurs AFTER setting up CORS. Configure JSON HTTP body parsting first
-ModuleRoutes(app);                                              // and then configure new routes.
+//mongoose.connect("mongodb://127.0.0.1:27017/kanbas");
+const CONNECTION_STRING =  'mongodb://127.0.0.1:27017/kanbas'
+mongoose.connect(CONNECTION_STRING);
+app.use(cors({
+    credentials: true,
+    origin: process.env.FRONTEND_URL,
+}));
+
+const sessionOptions = {
+secret: process.env.SESSION_SECRET,
+resave: false,
+saveUninitialized: false,
+};
+if (process.env.NODE_ENV !== "development") {
+sessionOptions.proxy = true;
+sessionOptions.cookie = {
+    sameSite: "none",
+    secure: true,
+    domain: process.env.HTTP_SERVER_DOMAIN,
+};
+}
+app.use(session(sessionOptions));
+      
+app.use(express.json());    
+UserRoutes(app);                                    
+ModuleRoutes(app);                                              
 CourseRoutes(app);
 AssignmentRoutes(app);
 Lab5(app);
 Hello(app);
 
-// Use the PORT environment variable if available, or use 4000 otherwise when running local machine.
-app.listen(process.env.PORT || 4000);                           // Listen to http://localhost:4000 OR the port declared in an environment variable called PORT available through process.env.PORT.
+
+app.listen(process.env.PORT || 4000);                           

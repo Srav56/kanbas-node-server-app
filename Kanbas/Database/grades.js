@@ -297,66 +297,6 @@ export default [
       "grade": "76.2"
   },
   {
-      "_id": "40",
-      "student": "130",
-      "assignment": "A202",
-      "grade": "56"
-  },
-  {
-      "_id": "41",
-      "student": "121",
-      "assignment": "A203",
-      "grade": "78"
-  },
-  {
-      "_id": "42",
-      "student": "122",
-      "assignment": "A203",
-      "grade": "89"
-  },
-  {
-      "_id": "43",
-      "student": "123",
-      "assignment": "A203",
-      "grade": "78"
-  },
-  {
-      "_id": "44",
-      "student": "124",
-      "assignment": "A203",
-      "grade": "90"
-  },
-  {
-      "_id": "45",
-      "student": "125",
-      "assignment": "A203",
-      "grade": "90"
-  },
-  {
-      "_id": "46",
-      "student": "126",
-      "assignment": "A203",
-      "grade": "89"
-  },
-  {
-      "_id": "47",
-      "student": "127",
-      "assignment": "A203",
-      "grade": "78.78"
-  },
-  {
-      "_id": "48",
-      "student": "128",
-      "assignment": "A203",
-      "grade": "78"
-  },
-  {
-      "_id": "49",
-      "student": "129",
-      "assignment": "A203",
-      "grade": "67.2"
-  },
-  {
       "_id": "50",
       "student": "130",
       "assignment": "A203",
@@ -1495,13 +1435,13 @@ export default [
       "grade": "56"
   },
   {
-      "_id": "216",
+      "_id": "246",
       "student": "126",
       "assignment": "A901",
       "grade": "100"
   },
   {
-      "_id": "217",
+      "_id": "247",
       "student": "127",
       "assignment": "A901",
       "grade": "99.75"
