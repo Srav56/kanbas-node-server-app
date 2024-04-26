@@ -1,4 +1,5 @@
 import * as dao from "./dao.js";
+let currentUser = null;
 export default function UserRoutes(app) {
   const createUser = async (req, res) => {
     const user = await dao.createUser(req.body);
@@ -30,14 +31,36 @@ export default function UserRoutes(app) {
     res.json(status);
   };
   const signup = async (req, res) => {
-    const user = await dao.findUserByUsername(req.body.username);
-    if (user) {
-      res.status(400).json(
-        { message: "Username already taken" });
-    }
-    const currentUser = await dao.createUser(req.body);
-    req.session["currentUser"] = currentUser;
-    res.json(currentUser);
+    console.log("[1] register");
+        const { username, password } = req.body;
+        console.log("[2] username, password", username, password);
+
+        const user = await dao.findUserByUsername(req.body.username);
+        if (user) {
+            res.status(400).json({ message: "Username already taken" });
+            return;
+        }
+
+        const existingUser = await dao.findUserByCredentials(username, password);
+        console.log("[3] existingUser", existingUser);
+
+        if (existingUser) {
+            res.status(400).send("User already exists");
+            return;
+        }
+        
+        try {
+            const _id = uuidv4();
+            const newUser = await dao.createUser({ _id, username, password });
+            console.log("[4] newUser", newUser);
+            req.session["currentUser"] = newUser;
+            console.log("[5] req.session", req.session);
+            res.send(newUser);
+        } catch (e) {
+            console.log("Error creating user: " + e);
+            res.status(400).send("Error creating user");
+        }
+
   };
   const signin = async (req, res) => {
     const { username, password } = req.body;
@@ -48,8 +71,7 @@ export default function UserRoutes(app) {
     } else {
       res.sendStatus(401);
     }
-    res.json(currentUser);
-  };
+  };  
   const signout = (req, res) => {
     //currentUser = null;
     req.session.destroy();
@@ -58,11 +80,12 @@ export default function UserRoutes(app) {
 
   const profile = async (req, res) => {
     const currentUser = req.session["currentUser"];
+    console.log("profile -- current user", currentUser);
     if (!currentUser) {
       res.sendStatus(401);
       return;
     }
-    res.json(currentUser);
+    res.send(currentUser);
   };
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
